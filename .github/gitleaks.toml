@@ -1,0 +1,25 @@
+# Secret scan rules (roadmap 7.4), used by .github/workflows/secret-scan.yml.
+# gitleaks' own default rules, plus rules for Sentry DSNs and Honeycomb keys, which the defaults do not cover.
+title = "Neuron Flow secret scan"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "sentry-dsn"
+description = "Sentry DSN: it can only submit events, but it belongs in a secret, not in a file"
+regex = '''https?://[0-9a-f]{32}(?::[0-9a-f]{32})?@[a-z0-9.-]*sentry\.io/[0-9]+'''
+keywords = ["sentry.io"]
+
+[[rules]]
+id = "honeycomb-key"
+description = "Honeycomb Ingest or Management key: it belongs in Render's Environment tab, not in a file"
+regex = '''(?i)\bhc[a-z](?:ik_[a-z0-9]{58}|mk_[a-z0-9]{26}:[a-z0-9]{32})\b'''
+keywords = ["ik_", "mk_"]
+
+# The fake keys that the tests use on purpose, to prove that real keys never leak into jobs, logs or files
+# (sk-ant-test-… for Claude, typhoon-test-… for Typhoon).
+# Only these exact shapes are allowed; a real key in a test file is still reported.
+[[allowlists]]
+description = "Deliberately fake keys in the tests"
+regexes = ['''^sk-ant-test-[A-Za-z0-9_-]*$''', '''^typhoon-test-[A-Za-z0-9_-]*$''', '''^test-access-key-[0-9]+$''']

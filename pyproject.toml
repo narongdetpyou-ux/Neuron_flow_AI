@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "system-neuron-flow-core"
+version = "0.4.1"
+description = "Reusable supervised, persistent workflow engine and verification primitives"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+dependencies = []
+
+[project.optional-dependencies]
+# Application-layer error reporting only; Core stays dependency-free.
+observability = ["sentry-sdk>=2.0"]
+
+[tool.setuptools.packages.find]
+include = ["neuron_flow*"]
